@@ -77,6 +77,7 @@ ElType getElmt(List l, int idx)
     return p->info;
   }else{
     printf("Indeks tidak valid!\n");
+    return;
   }
 }
 
@@ -124,7 +125,6 @@ void insertFirst(List *l, ElType val)
 }
 
 void insertLast(List *l, ElType val){
-  int i;
   Address new = newNode(val);
   if(new == NULL)  return;
   if(*l == NULL){
@@ -177,7 +177,6 @@ void deleteFirst(List *l, ElType *val)
   *val = temp->info;   
   *l = temp->next;     
   free(temp);          
-  }
 }
 
 void deleteLast(List *l, ElType *val)
