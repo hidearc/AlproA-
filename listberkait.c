@@ -84,11 +84,12 @@ void setElmt(List *l, int idx, ElType val)
 /* I.S. l terdefinisi, idx indeks yang valid dalam l, yaitu 0..length(l) */
 /* F.S. Mengubah elemen l pada indeks ke-idx menjadi val */
 {
-  if(0 <= idx && idx < length(l)){
+  if(0 <= idx && idx < length(*l)){
+    Address temp = *l;
     for(int i = 0; i < idx; i++){
-      l=l.next;
+      temp = temp->next;
     }
-    l.info = val;
+    temp->info = val;
   }else{
     printf("Indeks tidak valid!\n");
   }
@@ -102,9 +103,10 @@ int indexOf(List l, ElType val)
 {
   int i;
   Address p = l;
-  for(i = 0; p != val; i++){
+  for(i = 0; p->info != val; i++){
     p = p->next;
-  } 
+  }
+  if(p == NULL)  return IDX_UNDEF;
   return i;
 }
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
@@ -115,10 +117,8 @@ void insertFirst(List *l, ElType val)
 /* menambahkan elemen pertama dengan nilai val. */
 {
   Address new = newNode(val);
-  if(l == NULL){
-    *l = new;
-  }else{
-    new.next = l->next;
+  if(new!= NULL){
+    new->next = *l;
     *l = new;
   }
 }
@@ -126,10 +126,16 @@ void insertFirst(List *l, ElType val)
 void insertLast(List *l, ElType val){
   int i;
   Address new = newNode(val);
-  for(i = 0; l != NULL; i++){
-    l = l.next;
-  } 
-  *l.next = new;
+  if(new == NULL)  return;
+  if(*l == NULL){
+    *l = new;
+  }else{
+    Address temp = *l;
+    while(temp->next != NULL){
+      temp = temp->next;
+    }
+    temp->next = new;
+  }
 }
 /* I.S. l mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
@@ -137,12 +143,22 @@ void insertLast(List *l, ElType val){
 /* bernilai val. */
 
 void insertAt(List *l, ElType val, int idx){
-  int i;
+  if(idx < 0 || idx > length(*l)) return;
+  
   Address new = newNode(val);
-  for(i = 0; l != NULL && i < idx; i++){
-    l = l.next;
-  } 
-  *l.next = new;
+  if(new == NULL) return;
+  
+  if(idx == 0){
+    new->next = *l;
+    *l = new;
+  } else {
+    Address temp = *l;
+    for(int i = 0; i < idx - 1; i++){
+      temp = temp->next;
+    }
+    new->next = temp->next;
+    temp->next = new;
+  }
 }
 /* I.S. l tidak mungkin kosong, idx indeks yang valid dalam l, yaitu 0..length(l) */
 /* F.S. Melakukan alokasi sebuah elemen dan */
@@ -155,11 +171,12 @@ void deleteFirst(List *l, ElType *val)
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada val */
 /*      dan alamat elemen pertama di-dealokasi */
 {
-  if(!isEmpty(*l)){
-    *l = l.next;
-    *val = l.info;
-    free(l.info);
-    l.info = NULL;
+  if(*l == NULL) return;
+  
+  Address temp = *l;
+  *val = temp->info;   
+  *l = temp->next;     
+  free(temp);          
   }
 }
 
@@ -168,13 +185,22 @@ void deleteLast(List *l, ElType *val)
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada val */
 /*      dan alamat elemen terakhir di-dealokasi */
 {
-  Address p = *l;
-  while(p->next != NULL){
-    p = p->next;
+  if(*l == NULL) return;
+  
+  Address temp = *l;
+  if(temp->next == NULL){  // hanya 1 elemen
+    *val = temp->info;
+    free(temp);
+    *l = NULL;
+  } else {
+    while(temp->next->next != NULL){
+      temp = temp->next;
+    }
+    Address last = temp->next;
+    *val = last->info;
+    temp->next = NULL;
+    free(last);
   }
-  *val = p->info;
-  free(p);
-  p = NULL;
 }
 
 void deleteAt(List *l, int idx, ElType *val)
@@ -182,12 +208,19 @@ void deleteAt(List *l, int idx, ElType *val)
 /* F.S. val diset dengan elemen l pada indeks ke-idx. */
 /*      Elemen l pada indeks ke-idx dihapus dari l */
 {
-  Address p =*l;
-  if(0 <= idx && idx <= length(*l)){
-    for(int i = 0; i < idx;i++){
-      p = p.next;
+  if(idx < 0 || idx >= length(*l)) return;
+  
+  if(idx == 0){
+    deleteFirst(l, val);
+  } else {
+    Address temp = *l;
+    for(int i = 0; i < idx - 1; i++){
+      temp = temp->next;
     }
-    p.info = *val;
+    Address del = temp->next;
+    *val = del->info;
+    temp->next = del->next;
+    free(del);
   }
 }
 
@@ -201,8 +234,8 @@ void displayList(List l)
 {
   printf("[");
   while(l != NULL){
+    printf("%d, ", l->info);
     l = l->next;
-    printf("%d,", l->info);
   }
   printf("]\n");
 }
