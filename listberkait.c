@@ -77,7 +77,7 @@ ElType getElmt(List l, int idx)
     return p->info;
   }else{
     printf("Indeks tidak valid!\n");
-    return;
+    return NULL;
   }
 }
 
