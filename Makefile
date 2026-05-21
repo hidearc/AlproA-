@@ -7,18 +7,18 @@ LDFLAGS =
 TARGET = program
 
 # Source files
-SRCS = main.c link.c
+SRCS = main.c listberkait.c
 
 # Object files (replace .c with .o)
 OBJS = $(SRCS:.c=.o)
 
 # Header files
-HEADERS = link.h boolean.h
+HEADERS = listberkait.h boolean.h
 
 # Default target
 all: $(TARGET)
 
-# Link object files to create executable
+# listberkait object files to create executable
 $(TARGET): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
