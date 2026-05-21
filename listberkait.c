@@ -105,7 +105,7 @@ int indexOf(List l, ElType val)
 {
   int i;
   Address p = l;
-  for(i = 0; p->info != val; i++){
+  for(i = 0; p->info != val, i < length(l); i++){
     p = p->next;
   }
   if(p == NULL)  return IDX_UNDEF;
@@ -265,11 +265,11 @@ List concat(List l1, List l2)
   CreateList(&l3);
   int val;
   for(int i = 0; i < length(l1);i++){
-    deleteFirst(&l1, &val);
+    val = getElmt(l1, i);
     insertLast(&l3, val);
   }
   for(int i = 0; i < length(l2);i++){
-    deleteFirst(&l2, &val);
+    val = getElmt(l2, i);
     insertLast(&l3, val);
   }
   return l3;
