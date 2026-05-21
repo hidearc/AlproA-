@@ -1,0 +1,92 @@
+//Driver Code Starts
+// C program Using Floyd's Cycle Detection Algorithm
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int key;
+    struct Node *next;
+};
+
+
+void printList(struct Node *curr) {
+    while (curr != NULL) {
+        printf("%d ", curr->key);
+        curr = curr->next;
+    }
+    printf("
+");
+}
+//Driver Code Ends
+
+// Function to detect and remove loop in a linked list that
+// may contain loop
+void removeLoop(struct Node *head) {
+  
+    // PENANGANAN LIST KOSONG ATAU SINGLE ELEMENT
+    if (head == NULL || head->next == NULL)
+        return;
+
+    struct Node *slow = head, *fast = head;
+
+    // Move slow and fast 1 and 2 steps ahead respectively.
+    slow = slow->next;
+    fast = fast->next->next;
+
+    // Search for loop using slow and fast pointers
+    while (fast && fast->next) { // SELAMA FAST DAN FAST->NEXT != NULL
+        if (slow == fast) //JIKA KETEMU DI SATU NODE BERARTI ADA LOOP
+            break;
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // If loop exists
+    if (slow == fast) {
+        slow = head;
+
+        // this check is needed when slow and fast both meet
+        // at the head of the LL
+        if (slow == fast)  // CARI POINTER YANG MENGARAH KE SLOW
+            while (fast->next != slow) 
+                fast = fast->next;
+        else {
+            while (slow->next != fast->next) {
+                slow = slow->next;
+                fast = fast->next;
+            }
+        }
+
+        // since fast->next is the looping point
+        // remove loop
+        fast->next = NULL;
+    }
+}
+
+//Driver Code Starts
+struct Node *createNode(int key) {
+   struct Node *curr = 
+     	(struct Node *)malloc(sizeof(struct Node));
+    curr->key = key;
+    curr->next = NULL;
+    return curr;
+}
+
+int main() {
+	
+	// Create a hard-coded linked list:
+	// 1 -> 3 -> 4
+    struct Node *head = createNode(1);
+    head->next = createNode(3);
+    head->next->next = createNode(4);
+  
+	// Create a loop
+    head->next->next->next = head->next;
+
+    removeLoop(head);
+    printList(head);
+
+    return 0;
+}
+//Driver Code Ends
