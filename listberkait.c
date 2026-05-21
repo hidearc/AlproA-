@@ -8,6 +8,7 @@
 #include "boolean.h"
 
 #define IDX_UNDEF (-1)
+#define ELMT_UNDEF (-999)
 
 #define INFO(p) (p)->info
 #define NEXT(p) (p)->next
@@ -77,7 +78,7 @@ ElType getElmt(List l, int idx)
     return p->info;
   }else{
     printf("Indeks tidak valid!\n");
-    return NULL;
+    return ELMT_UNDEF;
   }
 }
 
