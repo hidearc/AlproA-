@@ -105,7 +105,7 @@ int indexOf(List l, ElType val)
 {
   int i;
   Address p = l;
-  for(i = 0; p->info != val && i < length(l); i++){
+  for(i = 0; p!=NULL && p->info != val; i++){
     p = p->next;
   }
   if(p == NULL)  return IDX_UNDEF;
