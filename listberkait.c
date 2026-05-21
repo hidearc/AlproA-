@@ -39,8 +39,8 @@ Address newNode(ElType val)
 {
   Address new = malloc(sizeof(Node));
   if(new != NULL){
-    new.info = val;
-    new.next = NULL;
+    new->info = val;
+    new->next = NULL;
     printf("Alokasi berhasil! Node sudah dibuat!\n");
     return new;
   }
@@ -72,9 +72,9 @@ ElType getElmt(List l, int idx)
   if(0 <= idx && idx < length(l)){
     Address p = l;
     for(int i = 0; i < idx; i++){
-      p=p.next;
+      p=p->next;
     }
-    return p.info;
+    return p->info;
   }else{
     printf("Indeks tidak valid!\n");
   }
@@ -103,7 +103,7 @@ int indexOf(List l, ElType val)
   int i;
   Address p = l;
   for(i = 0; p != val; i++){
-    p = p.next;
+    p = p->next;
   } 
   return i;
 }
@@ -118,7 +118,7 @@ void insertFirst(List *l, ElType val)
   if(l == NULL){
     *l = new;
   }else{
-    new.next = l.next;
+    new.next = l->next;
     *l = new;
   }
 }
@@ -169,9 +169,10 @@ void deleteLast(List *l, ElType *val)
 /*      dan alamat elemen terakhir di-dealokasi */
 {
   Address p = *l;
-  while(p.next != NULL){
-    p = p.next;
+  while(p->next != NULL){
+    p = p->next;
   }
+  *val = p->info;
   free(p);
   p = NULL;
 }
@@ -182,7 +183,7 @@ void deleteAt(List *l, int idx, ElType *val)
 /*      Elemen l pada indeks ke-idx dihapus dari l */
 {
   Address p =*l;
-  if(0 <= idx <= length(*l)){
+  if(0 <= idx && idx <= length(*l)){
     for(int i = 0; i < idx;i++){
       p = p.next;
     }
@@ -200,8 +201,8 @@ void displayList(List l)
 {
   printf("[");
   while(l != NULL){
-    l = l.next;
-    printf("%d,", l.info);
+    l = l->next;
+    printf("%d,", l->info);
   }
   printf("]\n");
 }
@@ -212,7 +213,7 @@ int length(List l)
   int i;
   Address p = l;
   for(i = 0; p != NULL; i++){
-    p = p.next;
+    p = p->next;
   } 
   return i;
 }
