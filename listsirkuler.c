@@ -171,5 +171,3 @@ void displayList(List l)
   }
   printf("]");
 }
-
-#endif
