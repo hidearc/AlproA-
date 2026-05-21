@@ -42,10 +42,10 @@ Address newNode(ElType val)
   if(new != NULL){
     new->info = val;
     new->next = NULL;
-    printf("Alokasi berhasil! Node sudah dibuat!\n");
+    //printf("Alokasi berhasil! Node sudah dibuat!\n");
     return new;
   }
-  printf("Alokasi gagal!\n");
+  //printf("Alokasi gagal!\n");
   return NULL;
 }
 
@@ -77,7 +77,7 @@ ElType getElmt(List l, int idx)
     }
     return p->info;
   }else{
-    printf("Indeks tidak valid!\n");
+    //printf("Indeks tidak valid!\n");
     return ELMT_UNDEF;
   }
 }
@@ -93,7 +93,7 @@ void setElmt(List *l, int idx, ElType val)
     }
     temp->info = val;
   }else{
-    printf("Indeks tidak valid!\n");
+    //printf("Indeks tidak valid!\n");
   }
 }
 
@@ -234,10 +234,13 @@ void displayList(List l)
 {
   printf("[");
   while(l != NULL){
-    printf("%d, ", l->info);
+    printf("%d", l->info);
     l = l->next;
+    if(l != NULL){
+      printf(",");
+    }
   }
-  printf("]\n");
+  printf("]");
 }
 
 int length(List l)
